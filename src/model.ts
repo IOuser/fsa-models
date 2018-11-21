@@ -1,61 +1,47 @@
-import { createModel, RematchDispatch, ModelEffects } from '@rematch/core';
+import { createModel } from './redux-model/create-model';
 
-type Source = {
-    id: string;
-    ignored: boolean;
-    name: string;
-}
-
-export type State = {
-    sources: Record<string, Source>
-    ids: string[];
-    ignoredIds: string[],
-}
-
-
-export const sourcesModel = createModel<State>({
+const modelConfig = {
+    name: 'testModel',
     state: {
-        sources: {},
-        ids: [],
-        ignoredIds: [],
+        number: 0,
+        sync: null,
     },
-
+    effects: {
+        async loadNumber(params: { delay?: number }): Promise<any> {
+            // throw Error('Some error');
+            const result = await new Promise<number>(r => setTimeout(() => r(42), params.delay || 2000));
+            return result;
+        },
+    },
     reducers: {
-        setSources(state: State, payload: Source[]): State {
-            const ids = payload.filter(s => !s.ignored).map(s => s.id);
-            const ignoredIds = payload.filter(s => s.ignored).map(s => s.id);
-
-            const sources = payload.reduce((acc: Record<string, Source>, source: Source) => {
-                acc[source.id] = source;
-                return acc;
-            }, {})
-
+        loadNumber(state: any, payload: number): any {
             return {
                 ...state,
-                ids,
-                ignoredIds,
-                sources: {
-                    ...state.sources,
-                    ...sources,
-                }
+                number: payload,
             }
+        },
+        somethingSync(state: any, payload: any): any {
+            return {
+                ...state,
+                sync: payload,
+            };
         }
     },
+}
 
-    effects(_dispatch: RematchDispatch): ModelEffects<State> {
-        return {
-            async loadSource() {
-                await new Promise(r => setTimeout(r, 2000));
+export const model = createModel(modelConfig);
+console.log(model);
 
-                const sources: Source[] = [
-                    { id: '1', name: 'Name 1', ignored: false },
-                    { id: '2', name: 'Name 2', ignored: false },
-                    { id: '3', name: 'Name 3', ignored: false },
-                    { id: '4', name: 'Name 4', ignored: true },
-                ];
+// TODO: Extract test cases
+let s: any = {};
+s = model.reducer(s, model.asyncActionsCreators.loadNumber.started({}))
+console.log(s);
 
-                this.setSources(sources)
-            }
-        }
-    }
-})
+s = model.reducer(s, model.asyncActionsCreators.loadNumber.done({ params: {}, result: 42 }))
+console.log(s);
+
+s = model.reducer(s, model.asyncActionsCreators.loadNumber.failed({ params: {}, error: new Error("Error while loading 42") }))
+console.log(s);
+
+s = model.reducer(s, model.actionsCreators.somethingSync('foo bar'))
+console.log(s);

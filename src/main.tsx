@@ -2,41 +2,46 @@ import React from 'react';
 import { render } from 'react-dom';
 import { connect, Provider } from 'react-redux'
 
+import { model } from './model';
 
-import { init } from '@rematch/core';
-import loadingPlugin from '@rematch/loading';
+import { configureStore } from './store';
+import { combineReducers, Reducer, Dispatch } from 'redux';
+import { all, fork } from 'redux-saga/effects';
+import { SagaIterator } from 'redux-saga';
 
+export function* rootSaga(): SagaIterator {
+    yield all([
+        fork(model.saga),
+    ])
+}
 
-import * as models from './model';
+type RootState = {
+    testModel: typeof model['state'];
+}
 
-const store = init({
-    models,
-    plugins: [loadingPlugin()]
-})
+const rootReducer = combineReducers<RootState>({ [model.name]: model.reducer as Reducer } as any)
 
-type Dispatch = typeof store.dispatch;
+const store = configureStore<RootState>({ [model.name]: model.state } as RootState, rootReducer, rootSaga);;
 
 const Test = connect(
     state => ({ state }),
-    (dispatch: any) => {
-        const d = dispatch as Dispatch;
+    (dispatch: Dispatch) => {
         return ({
-            loadSources: d.sourcesModel.loadSource,
+            loadNumber: () => dispatch(model.asyncActionsCreators.loadNumber.started({})),
+            syncAction: () => dispatch(model.actionsCreators.somethingSync(42)),
         });
     }
-)(({ state, loadSources }: any) => {
+)(({ state, loadNumber, syncAction }: any) => {
     return (
         <>
-            <button onClick={() => loadSources()}>click</button>
+            <button onClick={() => loadNumber()}>click</button>
+            <button onClick={syncAction}>sync</button>
             <pre>
                 {JSON.stringify(state, null, '  ')}
             </pre>
         </>
     );
 })
-
-
-
 
 const root = document.getElementById('root');
 render(<Provider store={store}><Test /></Provider>, root);
