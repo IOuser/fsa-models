@@ -24,11 +24,6 @@ export function prepareReducer<S, R, E>(params: ReducersParams<S, R, E>): Reduce
 
         // reducersKeys includes effectsKeys
         if (effectsKeys.includes(key)) {
-            // TODO: Figureout this case
-            if (actionCreator === undefined) {
-                throw Error(`${name}:${key} effect is not handled`);
-            }
-
             const asyncActionCreator = asyncActionCreators[key as unknown as keyof E];
             reducerBuilder.case(asyncActionCreator.started, (state: any) => ({
                 ...state,

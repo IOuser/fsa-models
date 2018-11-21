@@ -1,6 +1,6 @@
 import { createModel } from './redux-model/create-model';
 
-const modelConfig = {
+export const model = createModel({
     name: 'testModel',
     state: {
         number: 0,
@@ -27,9 +27,7 @@ const modelConfig = {
             };
         }
     },
-}
-
-export const model = createModel(modelConfig);
+});
 
 // TODO: Extract test cases
 // console.log(model);
