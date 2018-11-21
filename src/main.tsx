@@ -27,8 +27,8 @@ const Test = connect(
     state => ({ state }),
     (dispatch: Dispatch) => {
         return ({
-            loadNumber: () => dispatch(model.asyncActionsCreators.loadNumber.started({})),
-            syncAction: () => dispatch(model.actionsCreators.somethingSync(42)),
+            loadNumber: () => dispatch(model.actions.loadNumber({})),
+            syncAction: () => dispatch(model.actions.somethingSync(42)),
         });
     }
 )(({ state, loadNumber, syncAction }: any) => {

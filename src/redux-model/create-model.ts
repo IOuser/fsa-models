@@ -1,50 +1,57 @@
-import { SagaIterator } from 'redux-saga';
-import { ReducersActionsCreators, EffectsActionsCreators, Reducer } from './types';
+import { Saga, Reducer, ActionCreators } from './types';
 import { prepareReducer } from './prepare-reducer';
-import { prepareActionsCreators, prepareAsyncActionsCreators } from './prepare-action-creators';
+import { prepareActionCreators, prepareAsyncActionCreators, prepareAcrions } from './prepare-action-creators';
 import { prepareSaga } from './prepare-saga';
 
 
-export type ModelConfig<S, E, R> = {
+export type ModelConfig<S, E, H> = {
     name: string;
     state: S;
     effects: E;
-    reducers: R;
+    handlers: H;
 }
 
-export type Model<S, E, R> = {
+export type Model<S, E, H> = {
     name: string;
     state: S;
-    // TODO: merge actions;
-    actionsCreators: ReducersActionsCreators<R>;
-    asyncActionsCreators: EffectsActionsCreators<E>;
+    actions: ActionCreators<H, E>,
     reducer: Reducer<S>;
-    saga: () => SagaIterator;
+    saga: Saga;
 }
 
-export function createModel<S, E, R>(config: ModelConfig<S, E, R>): Model<S, E, R> {
-    const { name, reducers, effects, state } = config;
+export function createModel<S, E, H>(config: ModelConfig<S, E, H>): Model<S, E, H> {
+    const { name, handlers, effects, state } = config;
 
-    const actionsCreators = prepareActionsCreators(name, reducers);
-    const asyncActionsCreators = prepareAsyncActionsCreators(name, effects);
+    const actionCreators = prepareActionCreators(name, handlers);
+    const asyncActionCreators = prepareAsyncActionCreators(name, effects);
 
     const reducer = prepareReducer({
         name,
         state,
-        reducers,
+        handlers,
         effects,
-        actionsCreators,
-        asyncActionsCreators,
+        actionCreators,
+        asyncActionCreators,
     });
 
     const saga = prepareSaga({
         name,
         state,
-        reducers,
+        handlers,
         effects,
-        actionsCreators,
-        asyncActionsCreators,
+        actionCreators,
+        asyncActionCreators,
     });
 
-    return { name, state, actionsCreators, asyncActionsCreators, reducer, saga };
+    const actions = prepareAcrions(actionCreators, asyncActionCreators);
+
+    return { name, state, actions, reducer, saga };
 }
+
+// export function validateModelConfig<S, E, H>(config: ModelConfig<S, E, H>): ModelConfig<S, E, H> {
+//     if (process.env.NODE_ENV === 'production') {
+//         return config;
+//     }
+
+//     return config;
+// }

@@ -3,28 +3,31 @@ import { bindAsyncAction } from 'typescript-fsa-redux-saga';
 import { SagaIterator } from 'redux-saga';
 import { all, takeLatest, ForkEffect, call } from 'redux-saga/effects';
 
-import { ReducersActionsCreators, EffectsActionsCreators } from './types';
+import { ActionCreatorsFromHandlers, AsyncActionCreatorsFromEffects, Saga } from './types';
 
+const workerParams = {
+    skipStartedAction: true,
+};
 
 export type SagasParams<S, R, E> = {
     name: string;
     state: S;
-    reducers: R;
+    handlers: R;
     effects: E;
-    actionsCreators: ReducersActionsCreators<R>;
-    asyncActionsCreators: EffectsActionsCreators<E>;
+    actionCreators: ActionCreatorsFromHandlers<R>;
+    asyncActionCreators: AsyncActionCreatorsFromEffects<E>;
 }
 
-export function prepareSaga<S, R, E>(params: SagasParams<S, R, E>): () => SagaIterator {
-    const { name, effects, asyncActionsCreators } = params;
+export function prepareSaga<S, R, E>(params: SagasParams<S, R, E>): Saga {
+    const { name, effects, asyncActionCreators } = params;
 
     const binds: ForkEffect[] = [];
 
     for(const key in effects) {
         const fn: any = effects[key];
-        const actionCreator = asyncActionsCreators[key];
+        const actionCreator = asyncActionCreators[key];
 
-        const effectWorker = bindAsyncAction(actionCreator, { skipStartedAction: true })(function*(
+        const effectWorker = bindAsyncAction(actionCreator, workerParams)(function*(
             payload: unknown,
         ): SagaIterator {
             return yield call(fn, payload);

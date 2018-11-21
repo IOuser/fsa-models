@@ -1,12 +1,26 @@
-import { actionCreatorFactory } from "typescript-fsa";
-import { ReducersActionsCreators, EffectsActionsCreators } from "./types";
+import { actionCreatorFactory, AsyncActionCreators } from "typescript-fsa";
+import { ActionCreatorsFromHandlers, AsyncActionCreatorsFromEffects, ActionCreators, StartedAsyncActionCreatorsFromEffects } from "./types";
 
-export function prepareActionsCreators<R>(name: string, reducers: R): ReducersActionsCreators<R> {
+export function prepareAcrions<H, E>(
+    actionCreators: ActionCreatorsFromHandlers<H>,
+    asyncActionCreators: AsyncActionCreatorsFromEffects<E>
+): ActionCreators<H, E> {
+    const startedAsyncActionCreators = {} as StartedAsyncActionCreatorsFromEffects<E>;
+    for (const key in asyncActionCreators) {
+        startedAsyncActionCreators[key] = asyncActionCreators[key].started as any;
+    }
+
+    return {
+        ...actionCreators as any,
+        ...startedAsyncActionCreators as any,
+    }
+}
+
+export function prepareActionCreators<H>(name: string, handlers: H): ActionCreatorsFromHandlers<H> {
     const factory = actionCreatorFactory(name);
+    const actionCreators = {} as ActionCreatorsFromHandlers<H>;
 
-    const actionCreators: ReducersActionsCreators<R> = {} as any;
-
-    for (const key in reducers) {
+    for (const key in handlers) {
         actionCreators[key] = factory(key) as any;
     }
 
@@ -28,10 +42,10 @@ export function prepareActionsCreators<R>(name: string, reducers: R): ReducersAc
 // actionsCreators.lal(null);
 // actionsCreators.lal('foo');
 
-export function prepareAsyncActionsCreators<E>(name: string, effects: E): EffectsActionsCreators<E> {
+export function prepareAsyncActionCreators<E>(name: string, effects: E): AsyncActionCreatorsFromEffects<E> {
     const factory = actionCreatorFactory(name);
 
-    const actionCreators: EffectsActionsCreators<E> = {} as any;
+    const actionCreators = {} as AsyncActionCreatorsFromEffects<E>;
 
     for (const key in effects) {
         actionCreators[key] = factory.async(key) as any;

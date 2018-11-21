@@ -1,36 +1,36 @@
 import { Failure, Success } from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 
-import { ReducersActionsCreators, EffectsActionsCreators, Reducer } from './types';
+import { ActionCreatorsFromHandlers, AsyncActionCreatorsFromEffects, Reducer } from './types';
 
 export type ReducersParams<S, R, E> = {
     name: string;
     state: S;
-    reducers: R;
+    handlers: R;
     effects: E;
-    actionsCreators: ReducersActionsCreators<R>;
-    asyncActionsCreators: EffectsActionsCreators<E>;
+    actionCreators: ActionCreatorsFromHandlers<R>;
+    asyncActionCreators: AsyncActionCreatorsFromEffects<E>;
 }
 
 export function prepareReducer<S, R, E>(params: ReducersParams<S, R, E>): Reducer {
-    const { name, state, reducers, effects, actionsCreators, asyncActionsCreators } = params;
+    const { name, state, handlers, effects, actionCreators, asyncActionCreators } = params;
     const reducerBuilder = reducerWithInitialState<S>(state);
 
-    const reducersKeys = Object.keys(reducers);
     const effectsKeys = Object.keys(effects);
 
-    for (const key in reducers) {
-        const reducer = reducers[key] as unknown as Reducer;
-        const actionCreator = actionsCreators[key];
+    for (const key in handlers) {
+        const handler = handlers[key] as unknown as Reducer;
+        const actionCreator = actionCreators[key];
 
         // reducersKeys includes effectsKeys
         if (effectsKeys.includes(key)) {
+            // TODO: Figureout this case
             if (actionCreator === undefined) {
                 throw Error(`${name}:${key} effect is not handled`);
             }
 
-            const asyncActionCreators = asyncActionsCreators[key as unknown as keyof E];
-            reducerBuilder.case(asyncActionCreators.started, (state: any) => ({
+            const asyncActionCreator = asyncActionCreators[key as unknown as keyof E];
+            reducerBuilder.case(asyncActionCreator.started, (state: any) => ({
                 ...state,
                 _effects: {
                     ...state._effects,
@@ -41,19 +41,19 @@ export function prepareReducer<S, R, E>(params: ReducersParams<S, R, E>): Reduce
                 },
             }));
 
-            reducerBuilder.case(asyncActionCreators.failed, (state: any, { error }: Failure<unknown, Error>) => ({
+            reducerBuilder.case(asyncActionCreator.failed, (state: any, { error }: Failure<unknown, Error>) => ({
                 ...state,
                 _effects: {
                     ...state._effects,
                     [key]: {
-                        error,
+                        error: error.message || error.toString(),
                         performing: false,
                     },
                 },
             }));
 
-            reducerBuilder.case(asyncActionCreators.done, (state: any, { result }: Success<unknown, any>) => ({
-                ...reducer(state, result),
+            reducerBuilder.case(asyncActionCreator.done, (state: any, { result }: Success<unknown, any>) => ({
+                ...handler(state, result),
                 _effects: {
                     ...state._effects,
                     [key]: {
@@ -66,7 +66,7 @@ export function prepareReducer<S, R, E>(params: ReducersParams<S, R, E>): Reduce
             continue;
         }
 
-        reducerBuilder.case(actionCreator, reducer)
+        reducerBuilder.case(actionCreator, handler)
     }
 
     return reducerBuilder.build();
