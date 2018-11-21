@@ -4,12 +4,15 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@rematch/core": "^1.0.6",
-    "@rematch/loading": "^1.1.2",
     "react": "^16.7.0-alpha.2",
     "react-dom": "^16.7.0-alpha.2",
     "react-redux": "^5.1.1",
-    "redux": "^4.0.1"
+    "redux": "^4.0.1",
+    "redux-saga": "^0.16.2",
+    "reselect": "^4.0.0",
+    "typescript-fsa": "^3.0.0-beta-2",
+    "typescript-fsa-reducers": "^1.1.0",
+    "typescript-fsa-redux-saga": "^1.1.1"
   },
   "devDependencies": {
     "@types/react": "^16.7.6",

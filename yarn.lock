@@ -8,16 +8,6 @@
   dependencies:
     regenerator-runtime "^0.12.0"
 
-"@rematch/core@^1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@rematch/core/-/core-1.0.6.tgz#84677e62111f7d720c3ec552c1f9916353f4cbc3"
-  dependencies:
-    redux "4.0.0"
-
-"@rematch/loading@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@rematch/loading/-/loading-1.1.2.tgz#7c43d2c1f65b636d43c0d510bd170fb70f35fc15"
-
 "@types/node@*":
   version "10.12.9"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.9.tgz#a07bfa74331471e1dc22a47eb72026843f7b95c8"
@@ -2558,12 +2548,9 @@ readdirp@^2.0.0:
     micromatch "^3.1.10"
     readable-stream "^2.0.2"
 
-redux@4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.0.tgz#aa698a92b729315d22b34a0553d7e6533555cc03"
-  dependencies:
-    loose-envify "^1.1.0"
-    symbol-observable "^1.2.0"
+"redux-saga@>=0.14.0 <0.17.0 || 1.0.0-beta.0 || 1.0.0-beta.1 || 1.0.0-beta.2", redux-saga@^0.16.2:
+  version "0.16.2"
+  resolved "https://registry.yarnpkg.com/redux-saga/-/redux-saga-0.16.2.tgz#993662e86bc945d8509ac2b8daba3a8c615cc971"
 
 redux@^4.0.0, redux@^4.0.1:
   version "4.0.1"
@@ -2606,6 +2593,10 @@ require-main-filename@^1.0.1:
 requires-port@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
+
+reselect@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/reselect/-/reselect-4.0.0.tgz#f2529830e5d3d0e021408b246a206ef4ea4437f7"
 
 resolve-cwd@^2.0.0:
   version "2.0.0"
@@ -3079,7 +3070,7 @@ to-regex@^3.0.1, to-regex@^3.0.2:
     regex-not "^1.0.2"
     safe-regex "^1.1.0"
 
-tslib@^1.9.0:
+tslib@^1.7.1, tslib@^1.9.0:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
 
@@ -3097,6 +3088,22 @@ type-is@~1.6.16:
 typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
+
+typescript-fsa-reducers@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/typescript-fsa-reducers/-/typescript-fsa-reducers-1.1.0.tgz#b6f00e515a7fe2ad319a6f4f8e642b205405b1c2"
+
+typescript-fsa-redux-saga@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/typescript-fsa-redux-saga/-/typescript-fsa-redux-saga-1.1.1.tgz#bee346cbd3bffbab4610a44f900ef63aca466fca"
+  dependencies:
+    redux-saga ">=0.14.0 <0.17.0 || 1.0.0-beta.0 || 1.0.0-beta.1 || 1.0.0-beta.2"
+    tslib "^1.7.1"
+    typescript-fsa "^2.0.0 || ^3.0.0-beta-2"
+
+"typescript-fsa@^2.0.0 || ^3.0.0-beta-2", typescript-fsa@^3.0.0-beta-2:
+  version "3.0.0-beta-2"
+  resolved "https://registry.yarnpkg.com/typescript-fsa/-/typescript-fsa-3.0.0-beta-2.tgz#1cc1d0c014c025fd51cba097776033ac4b6b753c"
 
 typescript@^3.1.6:
   version "3.1.6"
