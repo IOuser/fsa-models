@@ -12,6 +12,9 @@ export const model = createModel({
             const result = await new Promise<number>(r => setTimeout(() => r(42), params.delay || 1000));
             return result;
         },
+        async loadString(params: object): Promise<any> {
+            throw Error('Some error');
+        },
     },
     handlers: {
         loadNumber(state: any, payload: number): any {

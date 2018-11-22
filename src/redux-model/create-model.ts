@@ -1,3 +1,6 @@
+import { createSelector } from 'reselect';
+import get from 'lodash/get';
+
 import { Saga, Reducer, ActionCreators } from './types';
 import { prepareReducer } from './prepare-reducer';
 import { prepareActionCreators, prepareAsyncActionCreators, prepareAcrions } from './prepare-action-creators';
@@ -17,6 +20,11 @@ export type Model<S, E, H> = {
     actions: ActionCreators<H, E>,
     reducer: Reducer<S>;
     saga: Saga;
+    selectors: {
+        stateSelector(rootState: unknown): S;
+        performSelector(rootState: unknown): Record<keyof E, boolean>;
+        errorsSelector(rootState: unknown): Record<keyof E, string | null>;
+    }
 }
 
 export function createModel<S, E, H>(config: ModelConfig<S, E, H>): Model<S, E, H> {
@@ -47,7 +55,36 @@ export function createModel<S, E, H>(config: ModelConfig<S, E, H>): Model<S, E, 
 
     const actions = prepareAcrions(actionCreators, asyncActionCreators);
 
-    return { name, state, actions, reducer, saga };
+    const stateSelector = (rootState: any): S => rootState[name];
+
+    return {
+        name,
+        state,
+        actions,
+        reducer,
+        saga,
+        selectors: {
+            stateSelector,
+            performSelector: createSelector(stateSelector, (state: S) => {
+                const r = {} as Record<keyof E, boolean>;
+
+                for (const key in effects) {
+                    r[key] = get(state, `_effects[${key}].performing`, false);
+                }
+
+                return r;
+            }),
+            errorsSelector: createSelector(stateSelector, (state: S) => {
+                const r = {} as Record<keyof E, string | null>;
+
+                for (const key in effects) {
+                    r[key] = get(state, `_effects[${key}].error`, null)
+                }
+
+                return r;
+            })
+        }
+    };
 }
 
 export function validateModelConfig<S, E, H>(config: ModelConfig<S, E, H>): ModelConfig<S, E, H> {
@@ -55,12 +92,14 @@ export function validateModelConfig<S, E, H>(config: ModelConfig<S, E, H>): Mode
         return config;
     }
 
-    const { handlers, effects } = config;
+    const { name, handlers, effects } = config;
     const handlersKeys = Object.keys(handlers);
     const effectsKeys = Object.keys(effects);
 
     for (const effectKey of effectsKeys) {
-        console.assert(handlersKeys.includes(effectKey), `${effectKey} doesn't have handler`);
+        if (!handlersKeys.includes(effectKey)) {
+            console.warn(`${name}:${effectKey} effect doesn't have handler`);
+        }
     }
 
     return config;

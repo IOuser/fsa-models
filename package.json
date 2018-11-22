@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "lodash": "^4.17.11",
     "react": "^16.7.0-alpha.2",
     "react-dom": "^16.7.0-alpha.2",
     "react-redux": "^5.1.1",
@@ -15,6 +16,7 @@
     "typescript-fsa-redux-saga": "^1.1.1"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.118",
     "@types/react": "^16.7.6",
     "@types/react-dom": "^16.0.9",
     "@types/react-redux": "^6.0.9",
