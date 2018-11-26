@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect';
-import get from 'lodash/get';
 
 import { Saga, Reducer, ActionCreators } from './types';
 import { prepareReducer } from './prepare-reducer';
@@ -14,14 +13,25 @@ export type ModelConfig<S, E, H> = {
     handlers: H;
 }
 
+export type EffectState = {
+    error: null | string;
+    performing: boolean;
+}
+
+export type ResultState<S, E> = S & {
+    _effects?: {
+        [key in keyof E]?: EffectState;
+    };
+}
+
 export type Model<S, E, H> = {
     name: string;
-    state: S;
+    state: ResultState<S, E>;
     actions: ActionCreators<H, E>,
-    reducer: Reducer<S>;
+    reducer: Reducer<ResultState<S, E>>;
     saga: Saga;
     selectors: {
-        stateSelector(rootState: unknown): S;
+        stateSelector(rootState: unknown): ResultState<S, E>;
         performSelector(rootState: unknown): Record<keyof E, boolean>;
         errorsSelector(rootState: unknown): Record<keyof E, string | null>;
     }
@@ -55,7 +65,7 @@ export function createModel<S, E, H>(config: ModelConfig<S, E, H>): Model<S, E, 
 
     const actions = prepareAcrions(actionCreators, asyncActionCreators);
 
-    const stateSelector = (rootState: any): S => rootState[name];
+    const stateSelector = (rootState: any): ResultState<S, E> => rootState[name];
 
     return {
         name,
@@ -66,22 +76,22 @@ export function createModel<S, E, H>(config: ModelConfig<S, E, H>): Model<S, E, 
         selectors: {
             stateSelector,
             performSelector: createSelector(stateSelector, (state: S) => {
-                const r = {} as Record<keyof E, boolean>;
+                const result = {} as Record<keyof E, boolean>;
 
                 for (const key in effects) {
-                    r[key] = get(state, `_effects[${key}].performing`, false);
+                    result[key] = getEffectState(state, key as keyof E, 'performing', false);
                 }
 
-                return r;
+                return result;
             }),
             errorsSelector: createSelector(stateSelector, (state: S) => {
-                const r = {} as Record<keyof E, string | null>;
+                const result = {} as Record<keyof E, string | null>;
 
                 for (const key in effects) {
-                    r[key] = get(state, `_effects[${key}].error`, null)
+                    result[key] = getEffectState(state, key as keyof E, 'error', null);
                 }
 
-                return r;
+                return result;
             })
         }
     };
@@ -103,4 +113,19 @@ export function validateModelConfig<S, E, H>(config: ModelConfig<S, E, H>): Mode
     }
 
     return config;
+}
+
+
+function getEffectState<S, E, K extends keyof EffectState>(state: ResultState<S, E>, effect: keyof E, key: K, def: EffectState[K]): EffectState[K] {
+    const effectsState = state._effects;
+    if (effectsState === undefined) {
+        return def;
+    }
+
+    const effectState = effectsState[effect];
+    if (effectState === undefined) {
+        return def;
+    }
+
+    return effectState[key];
 }
