@@ -1,0 +1,4 @@
+./node_modules
+./dest/*
+!./dest/index.html
+*.log

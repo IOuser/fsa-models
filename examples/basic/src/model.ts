@@ -1,4 +1,4 @@
-import { createModel } from './redux-model/create-model';
+import { createModel } from '../../../src/create-model';
 
 export const model = createModel({
     name: 'testModel',
