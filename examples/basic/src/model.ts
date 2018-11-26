@@ -1,4 +1,4 @@
-import { createModel } from '../../../src/create-model';
+import { createModel } from 'fsa-models';
 
 export const model = createModel({
     name: 'testModel',

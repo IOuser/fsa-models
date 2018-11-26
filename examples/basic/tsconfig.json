@@ -11,7 +11,7 @@
         "allowSyntheticDefaultImports": true,
         "jsx": "react",
         "moduleResolution": "node",
-        "rootDir": "../../",
+        "rootDir": "src",
         "strict": true,
     },
     "exclude": [

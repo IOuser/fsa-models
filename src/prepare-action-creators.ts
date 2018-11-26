@@ -1,4 +1,4 @@
-import { actionCreatorFactory, AsyncActionCreators } from "typescript-fsa";
+import { actionCreatorFactory } from "typescript-fsa";
 import { ActionCreatorsFromHandlers, AsyncActionCreatorsFromEffects, ActionCreators, StartedAsyncActionCreatorsFromEffects } from "./types";
 
 export function prepareAcrions<H, E>(

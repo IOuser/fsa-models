@@ -13,7 +13,7 @@ export type ReducersParams<S, R, E> = {
 }
 
 export function prepareReducer<S, R, E>(params: ReducersParams<S, R, E>): Reducer {
-    const { name, state, handlers, effects, actionCreators, asyncActionCreators } = params;
+    const { state, handlers, effects, actionCreators, asyncActionCreators } = params;
     const reducerBuilder = reducerWithInitialState<S>(state);
 
     const effectsKeys = Object.keys(effects);
