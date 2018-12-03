@@ -33,7 +33,7 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-        "npm run prettier",
+        "npm run tslint",
         "git add"
     ]
   },
