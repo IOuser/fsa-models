@@ -1,41 +1,54 @@
 {
-    "name": "fsa-models",
-    "version": "0.0.1",
-    "description": "Strict-typed fsa models",
-    "main": "./lib/create-model.js",
-    "typings": "./lib/create-model.d.ts",
-    "files": [
-        "lib"
-    ],
-    "author": "Igor Emets <ya.peren@yandex.ru>",
-    "license": "WTFPL",
-    "scripts": {
-        "build": "npm run build:ts",
-        "build:ts": "tsc",
-        "test": "jest",
-        "tslint": "tslint -p tsconfig.json -c tslint.json",
-        "prettier": "prettier --write *.js **/*.js **/*.ts **/*.tsx",
-        "clean": "rm -rf lib",
-        "prepack": "npm run clean && npm run build",
-        "precommit": "lint-staged",
-        "patch": "yarn version --new-version patch && npm publish --access public",
-        "minor": "yarn version --new-version minor && npm publish --access public"
-    },
-    "dependencies": {
-        "redux": "^4.0.1",
-        "redux-saga": "^0.16.2",
-        "reselect": "^4.0.0",
-        "tslib": "^1.9.3",
-        "typescript-fsa": "^3.0.0-beta-2",
-        "typescript-fsa-reducers": "^1.1.0",
-        "typescript-fsa-redux-saga": "^1.1.1"
-    },
-    "devDependencies": {
-        "@types/node": "^10.12.10",
-        "awesome-typescript-loader": "^5.2.1",
-        "typescript": "^3.1.6",
-        "webpack": "^4.26.0",
-        "webpack-cli": "^3.1.2",
-        "webpack-dev-server": "^3.1.10"
+  "name": "fsa-models",
+  "version": "0.0.1",
+  "private": false,
+  "description": "Strict-typed fsa models",
+  "main": "./lib/create-model.js",
+  "typings": "./lib/create-model.d.ts",
+  "files": [
+    "lib"
+  ],
+  "author": "Igor Emets <ya.peren@yandex.ru>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IOuser/fsa-models"
+  },
+  "license": "WTFPL",
+  "scripts": {
+    "build": "npm run build:ts",
+    "build:ts": "tsc",
+    "test": "jest",
+    "tslint": "tslint -p tsconfig.json -c tslint.json",
+    "prettier": "prettier --write *.js **/*.js **/*.ts **/*.tsx",
+    "clean": "rm -rf lib",
+    "prepack": "npm run clean && npm run build",
+    "release": "standard-version",
+    "cm": "git-cz"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
+  },
+  "dependencies": {
+    "redux": "^4.0.1",
+    "redux-saga": "^0.16.2",
+    "reselect": "^4.0.0",
+    "tslib": "^1.9.3",
+    "typescript-fsa": "^3.0.0-beta-2",
+    "typescript-fsa-reducers": "^1.1.0",
+    "typescript-fsa-redux-saga": "^1.1.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^7.2.1",
+    "@types/node": "^10.12.10",
+    "awesome-typescript-loader": "^5.2.1",
+    "git-cz": "^1.7.1",
+    "husky": "^1.2.0",
+    "standard-version": "^4.4.0",
+    "typescript": "^3.1.6",
+    "webpack": "^4.26.0",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
+  }
 }
