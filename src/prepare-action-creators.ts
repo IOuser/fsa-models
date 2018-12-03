@@ -1,9 +1,14 @@
-import { actionCreatorFactory } from "typescript-fsa";
-import { ActionCreatorsFromHandlers, AsyncActionCreatorsFromEffects, ActionCreators, StartedAsyncActionCreatorsFromEffects } from "./types";
+import { actionCreatorFactory } from 'typescript-fsa';
+import {
+    ActionCreatorsFromHandlers,
+    AsyncActionCreatorsFromEffects,
+    ActionCreators,
+    StartedAsyncActionCreatorsFromEffects,
+} from './types';
 
 export function prepareAcrions<H, E>(
     actionCreators: ActionCreatorsFromHandlers<H>,
-    asyncActionCreators: AsyncActionCreatorsFromEffects<E>
+    asyncActionCreators: AsyncActionCreatorsFromEffects<E>,
 ): ActionCreators<H, E> {
     const startedAsyncActionCreators = {} as StartedAsyncActionCreatorsFromEffects<E>;
     for (const key in asyncActionCreators) {
@@ -11,9 +16,9 @@ export function prepareAcrions<H, E>(
     }
 
     return {
-        ...actionCreators as any,
-        ...startedAsyncActionCreators as any,
-    }
+        ...(actionCreators as any),
+        ...(startedAsyncActionCreators as any),
+    };
 }
 
 export function prepareActionCreators<H>(name: string, handlers: H): ActionCreatorsFromHandlers<H> {
@@ -53,7 +58,6 @@ export function prepareAsyncActionCreators<E>(name: string, effects: E): AsyncAc
 
     return actionCreators;
 }
-
 
 // TODO: Extract test cases
 // const effects = {

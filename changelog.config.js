@@ -1,66 +1,51 @@
 module.exports = {
-    "list": [
-        "feat",
-        "fix",
-        "refactor",
-        "style",
-        "perf",
-        "test",
-        "docs",
-        "chore",
-        "ci",
-    ],
-    "maxMessageLength": 72,
-    "minMessageLength": 3,
-    "questions": [
-        "type",
-        "subject",
-        "body",
-        "issues",
-    ],
-    "scopes": [
+    list: ['feat', 'fix', 'refactor', 'style', 'perf', 'test', 'docs', 'chore', 'ci'],
+    maxMessageLength: 72,
+    minMessageLength: 3,
+    questions: ['type', 'subject', 'body', 'issues'],
+    scopes: [
         //
     ],
-    "types": {
-        "chore": {
-            "description": "Build process or auxiliary tool changes",
-            "value": "chore"
+    types: {
+        chore: {
+            description: 'Build process or auxiliary tool changes',
+            value: 'chore',
         },
-        "ci": {
-            "description": "CI related changes",
-            "value": "ci"
+        ci: {
+            description: 'CI related changes',
+            value: 'ci',
         },
-        "docs": {
-            "description": "Documentation only changes",
-            "value": "docs"
+        docs: {
+            description: 'Documentation only changes',
+            value: 'docs',
         },
-        "feat": {
-            "description": "A new feature",
-            "value": "feat"
+        feat: {
+            description: 'A new feature',
+            value: 'feat',
         },
-        "fix": {
-            "description": "A bug fix",
-            "value": "fix"
+        fix: {
+            description: 'A bug fix',
+            value: 'fix',
         },
-        "perf": {
-            "description": "A code change that improves performance",
-            "value": "perf"
+        perf: {
+            description: 'A code change that improves performance',
+            value: 'perf',
         },
-        "refactor": {
-            "description": "A code change that neither fixes a bug or adds a feature",
-            "value": "refactor"
+        refactor: {
+            description: 'A code change that neither fixes a bug or adds a feature',
+            value: 'refactor',
         },
-        "release": {
-            "description": "Create a release commit",
-            "value": "release"
+        release: {
+            description: 'Create a release commit',
+            value: 'release',
         },
-        "style": {
-            "description": "Markup, white-space, formatting, missing semi-colons...",
-            "value": "style"
+        style: {
+            description: 'Markup, white-space, formatting, missing semi-colons...',
+            value: 'style',
         },
-        "test": {
-            "description": "Adding missing tests",
-            "value": "test"
-        }
-    }
+        test: {
+            description: 'Adding missing tests',
+            value: 'test',
+        },
+    },
 };

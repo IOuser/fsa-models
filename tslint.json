@@ -7,7 +7,7 @@
         "node_modules/tslint-react/rules"
     ],
     "rules": {
-        "prettier": [true, "."],
+        "prettier": [true, ".prettierrc"],
         "adjacent-overload-signatures": true,
         "array-type": [true, "array"],
         "callable-types": true,
@@ -15,7 +15,6 @@
         "comment-format": [true, "check-space"],
         "curly": true,
         "cyclomatic-complexity": [true, 13],
-        "forin": true,
         "interface-name": [false, "never-prefix"],
         "jsdoc-format": true,
         "max-classes-per-file": [true, 5],
@@ -45,7 +44,6 @@
             }
         ],
         "no-angle-bracket-type-assertion": true,
-        "no-any": true,
         "no-arg": true,
         "no-conditional-assignment": true,
         "no-construct": true,

@@ -8,8 +8,13 @@ export const model = createModel({
     },
     effects: {
         async loadNumber(params: { delay?: number }): Promise<any> {
+            const result = await new Promise<number>((r: (v: number) => void) =>
+                setTimeout(() => r(42), params.delay || 1000),
+            );
+
             // throw Error('kekekek')
-            const result = await new Promise<number>(r => setTimeout(() => r(42), params.delay || 1000));
+            console.log(`Effect: ${result}`);
+
             return result;
         },
         async loadString(params: object): Promise<any> {
@@ -21,14 +26,14 @@ export const model = createModel({
             return {
                 ...state,
                 number: payload,
-            }
+            };
         },
         somethingSync(state: any, payload: any): any {
             return {
                 ...state,
                 sync: payload,
             };
-        }
+        },
     },
 });
 
